@@ -6,18 +6,28 @@ import (
 	user "github.com/digiconvent/install_on_debian/user"
 )
 
-func InstallThisBinary(name string) (systemctl.StartedService, error) {
-	u, err := user.CreateOrGetUser(name)
+type Binary struct {
+	name string
+}
+
+func NewBinary(name string) *Binary {
+	return &Binary{
+		name: name,
+	}
+}
+
+func (b *Binary) Install() (systemctl.StartedService, error) {
+	u, err := user.CreateOrGetUser(b.name)
 	if err != nil {
 		return nil, err
 	}
 
-	sysCtl, err := systemctl.Get(name)
+	sysCtl, err := systemctl.Get(b.name)
 	if err != nil {
 		return nil, err
 	}
 
-	bin := binary.New(name)
+	bin := binary.New(b.name)
 	err = bin.HardLinkToHome()
 	if err != nil {
 		return nil, err
@@ -44,8 +54,8 @@ func InstallThisBinary(name string) (systemctl.StartedService, error) {
 	return startedService, nil
 }
 
-func UninstallThisBinary(name string) error {
-	sysCtl, err := systemctl.Get(name)
+func (b *Binary) Uninstall() error {
+	sysCtl, err := systemctl.Get(b.name)
 	if err != nil {
 		return err
 	}
@@ -65,4 +75,21 @@ func UninstallThisBinary(name string) error {
 	sysCtl.User.Delete()
 
 	return nil
+}
+
+func (b *Binary) IsInstalled() (bool, error) {
+	c, err := systemctl.Get(b.name)
+	if err != nil {
+		return false, err
+	}
+	return c.IsInstalled(), nil
+}
+
+func (b *Binary) IsRunning() (bool, error) {
+	c, err := systemctl.Get(b.name)
+
+	if err != nil {
+		return false, err
+	}
+	return c.IsRunning(), nil
 }

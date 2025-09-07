@@ -42,8 +42,8 @@ func TestInstallOnDebian(t *testing.T) {
 		fmt.Println("Running once and then self destruct")
 		main()
 	}
-
-	service, err := install_on_debian.InstallThisBinary(name)
+	bin := install_on_debian.NewBinary(name)
+	service, err := bin.Install()
 	if err != nil {
 		t.Fatal(err)
 	}
