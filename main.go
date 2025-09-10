@@ -77,12 +77,12 @@ func (b *Binary) Uninstall() error {
 	return nil
 }
 
-func (b *Binary) IsInstalled() (bool, error) {
+func (b *Binary) IsInstalled() bool {
 	c, err := systemctl.Get(b.name)
 	if err != nil {
-		return false, err
+		return false
 	}
-	return c.IsInstalled(), nil
+	return c.IsInstalled()
 }
 
 func (b *Binary) IsRunning() (bool, error) {

@@ -47,13 +47,14 @@ func TestCreateUser(t *testing.T) {
 
 func Cleanup() {
 	u, err := user.CreateOrGetUser(username)
-	if err != nil {
-		fmt.Println(err)
+	if err != nil && user.UserExists(username) {
+		fmt.Println("could not create/get user " + username + ":" + err.Error() + "even though the user exists")
+		return
 	}
 
 	err = u.Delete()
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("could not delete user " + username + ":" + err.Error())
 	}
 
 	if user.UserExists(username) {

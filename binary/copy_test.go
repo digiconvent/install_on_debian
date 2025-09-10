@@ -19,7 +19,7 @@ var name string = "binary_tests"
 func TestHardLink(t *testing.T) {
 	u, err := user.CreateOrGetUser(name)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatal("cannot CreateOrGetUser", name, err)
 	}
 
 	defer u.Delete()

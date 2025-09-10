@@ -21,7 +21,7 @@ func CreateOrGetUser(name string) (*OsUserAccount, error) {
 	if err != nil {
 		output, err := exec.Command("sudo", "useradd", "--create-home", name).Output()
 		if err != nil {
-			return nil, errors.New(err.Error() + string(output))
+			return nil, errors.New("cannot create user:" + err.Error() + string(output))
 		}
 
 		if utils.FileExists(userAccount.sudoersFile()) {
