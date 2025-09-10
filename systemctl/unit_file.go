@@ -20,7 +20,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=` + binaryPath(name) + `
+ExecStart=` + binaryPath(name) + ` --mode=serve
 Restart=on-failure
 User=` + name + `
 Group=` + name + `
